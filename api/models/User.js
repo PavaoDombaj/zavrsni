@@ -4,12 +4,12 @@ const UserSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
     password: {
         type: String,
@@ -19,11 +19,11 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    workFor:{
-        type:String,
-        deafult:null
-    },
-
-}, { timestamps: true })
+    salons: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Worker',
+        default:null,
+    }],
+}, { timestamps: true });
 
 export default mongoose.model("User", UserSchema);

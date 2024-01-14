@@ -1,25 +1,27 @@
 import mongoose from "mongoose";
 
 const WorkerSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    password: {
+    name: {
         type: String,
         required: true,
     },
-    isAdmin: {
-        type: Boolean,
-        default: false,
+    role: {
+        type: String,
+        required: true,
     },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
+    salons: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Salon',
+    }],
+    workSchedules: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'WorkSchedule',
+    }],
+});
 
-}, { timestamps: true })
-
-export default mongoose.model("User", WorkerSchema);
+export default mongoose.model("Worker", WorkerSchema);

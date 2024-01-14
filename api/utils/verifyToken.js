@@ -33,3 +33,21 @@ export const verifyAdmin = (req, res, next) => {
     }
   });
 };
+
+export const verifyWorker = (req, res, next) => {
+  verifyToken(req, res, (err) => {
+    if (err) {
+      return next(err);
+    }
+
+    const user = req.user;
+
+    // Provjeravamo je li korisnik radnik u nekom salonu ili administrator
+
+    if (user.isAdmin || user.salons ==! null) {
+      next();
+    } else {
+      return next(createError(403, "You are not authorized!"));
+    }
+  });
+};

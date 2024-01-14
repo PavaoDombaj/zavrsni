@@ -7,6 +7,7 @@ import salonRoute from "./routes/salon.js";
 import workerRoute from "./routes/worker.js";
 import cookieParser from "cookie-parser";
 
+
 const app = express();
 dotenv.config();
 
