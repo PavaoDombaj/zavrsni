@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import Worker from "../models/Worker.js";
+import Salon from "../models/Salon.js";
 
 export const createWorker = async (req, res, next) => {
     try {
@@ -20,13 +21,14 @@ export const createWorker = async (req, res, next) => {
             return res.status(400).json({message:"Korsnik vec radi u nekom salonu!"})
         }
 
+        const newWorkerSalon = await Salon.findById(req.body.salon)
         // Stvori novog radnika s istim ID-om korisnika
         const newWorker = new Worker({
             name: req.body.name,
             role: req.body.role,
             user: existingUser._id,
             _id: existingUser._id, // Postavi user polje na ID postojećeg korisnika
-            salons: [],
+            salons: newWorkerSalon,
             workSchedules: [],
         });
 
@@ -59,11 +61,19 @@ export const updateWorker = async (req, res, next) => {
 export const deleteWorker = async (req, res, next) => {
     try {
         const deletedWorker = await Worker.findByIdAndDelete(req.params.id);
+
+        // Obrisi salons od workera u users tabeli i stavi na null
+        await User.updateMany(
+            { salons: req.params.id }, // NEED TO TEST
+            { $set: { salons: null } }
+        );
+
         res.status(200).json("Worker has been deleted!");
     } catch (err) {
-        next(err)
+        next(err);
     }
-}
+};
+
 export const getWorker = async (req, res, next) => {
     try {
         const worker = await Worker.findById(req.params.id);

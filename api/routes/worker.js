@@ -20,12 +20,12 @@ router.put("/", verifyWorker, createWorker);
 router.put("/:id", verifyUser, updateWorker);
 
 // DELETE
-router.delete("/:id",  verifyUser,deleteWorker);
+router.delete("/:id", verifyAdmin, deleteWorker);
 
 // GET
 router.get("/:id", verifyUser, getWorker);
 
 // GET ALL
-router.get("/",verifyAdmin, getWorkers);
+router.get("/", verifyAdmin, getWorkers);
 
 export default router

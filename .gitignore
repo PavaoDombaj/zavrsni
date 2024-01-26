@@ -1,0 +1,6 @@
+# .gitignore
+
+# Ignoriraj određene datoteke
+bookly koncept.jpg
+zavrsni koncept.docx
+.env

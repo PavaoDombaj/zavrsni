@@ -6,8 +6,9 @@ const WorkScheduleSchema = new mongoose.Schema({
         ref: 'Worker',
         required: true,
     },
-    day: {
-        type: Date,
+    // Dodano polje za radne dane u tjednu
+    workingDays: {
+        type: [String], // Npr. ["Monday", "Wednesday"]
         required: true,
     },
     startTime: {
@@ -17,6 +18,17 @@ const WorkScheduleSchema = new mongoose.Schema({
     endTime: {
         type: Date,
         required: true,
+    },
+    // Dodano polje za pauzu
+    break: {
+        startTime: {
+            type: Date,
+            default: null,
+        },
+        endTime: {
+            type: Date,
+            default: null,
+        },
     },
     isAvailable: {
         type: Boolean,
