@@ -3,24 +3,24 @@ import Salon from "../models/Salon.js";
 import { createError } from "../utils/error.js";
 
 import {
-    createSalon,
-    updateSalon,
-    deleteSalon,
-    getSalon,
-    getSalons,
+  createSalon,
+  updateSalon,
+  deleteSalon,
+  getSalon,
+  getSalons,
 } from "../controllers/salon.js";
 import { verifyAdmin } from "../utils/verifyToken.js";
 
 const router = express.Router();
 
 // CREATE
-router.post("/",verifyAdmin, createSalon);
+router.post("/", verifyAdmin, createSalon);
 
 // UPDATE
-router.put("/:id",verifyAdmin, updateSalon);
+router.put("/:id", verifyAdmin, updateSalon);
 
 // DELETE
-router.delete("/:id",verifyAdmin, deleteSalon);
+router.delete("/:id", verifyAdmin, deleteSalon);
 
 // GET
 router.get("/:id", getSalon);

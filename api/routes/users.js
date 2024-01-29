@@ -7,6 +7,7 @@ import {
     getUsers,
 } from "../controllers/user.js";
 import { verifyToken, verifyUser, verifyAdmin } from "../utils/verifyToken.js";
+import {deleteWorker} from "../controllers/worker.js"
 
 
 
@@ -29,7 +30,7 @@ router.get("/checkadmin/:id", verifyAdmin, (req, res, next)=>{
 router.put("/:id", verifyUser, updateUser);
 
 // DELETE
-router.delete("/:id", verifyUser, deleteUser);
+router.delete("/:id", verifyUser, deleteWorker, deleteUser);
 
 // GET
 router.get("/:id", verifyUser, getUser);

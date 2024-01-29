@@ -1,2 +1,0 @@
-SKORO SIGURNO RADI: SALON, USER, AUTH
-POTREBNO DORADITI rezervacije services, schedules...(mozda nepotrebno nesto u modelima)

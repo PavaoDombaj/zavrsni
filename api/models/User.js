@@ -21,7 +21,6 @@ const UserSchema = new mongoose.Schema({
     },
     salons: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Worker',
         default:null,
     }],
 }, { timestamps: true });

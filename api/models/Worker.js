@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const WorkerSchema = new mongoose.Schema({
+    /// _id ==== Dohvacanje IDa iz table users
     name: {
         type: String,
         required: true,
@@ -10,16 +11,16 @@ const WorkerSchema = new mongoose.Schema({
         required: true,
     },
     user: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String, /// putem IDa iz tablice users dohvati username
         ref: 'User',
         required: true,
     },
     salons: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId, //// linkanje sa tablicom salons 
         ref: 'Salon',
     }],
     workSchedules: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,//// linkanje sa tablicom
         ref: 'WorkSchedule',
     }],
 });

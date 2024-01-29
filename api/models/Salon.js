@@ -26,6 +26,7 @@ const SalonSchema = new mongoose.Schema({
             address: String,
         },
         required: true,
+        _id: false, // Postavljanje opcije _id na false za onemogućavanje automatskog _id polja unutar location objekta
     },
     images: {
         type: [String],
