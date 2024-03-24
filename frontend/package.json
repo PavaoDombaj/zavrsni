@@ -1,0 +1,42 @@
+{
+  "name": "bookly",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "proxy": "http://localhost:8800",
+  "scripts": {
+    "dev": "vite",
+    "start:both": "concurrently \"yarn start\" \"cd ../backend && yarn start\"",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@material-tailwind/react": "^2.1.9",
+    "axios": "^1.6.7",
+    "concurrently": "^8.2.2",
+    "cors": "^2.8.5",
+    "date-fns": "^3.3.1",
+    "got": "^11.8.6",
+    "package-lock": "^1.0.3",
+    "react": "^18.2.0",
+    "react-calendar": "^4.8.0",
+    "react-cookie": "^7.1.0",
+    "react-datepicker": "^6.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.1",
+    "react-time-picker": "^6.6.0",
+    "react-timepicker": "^2.0.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "@vitejs/plugin-react": "^2.0.0",
+    "autoprefixer": "^10.4.7",
+    "postcss": "^8.4.14",
+    "tailwindcss": "^3.1.6",
+    "vite": "^3.0.0"
+  }
+}
