@@ -11,7 +11,7 @@ const Navbar = ({ navList }) => {
 
   const handleNavigation = (nav) => {
     setActive(nav.title);
-    const destination = nav.do === "route" ? `/${nav.id}` : `#${nav.id}`;
+    const destination = nav.do === "route" ? `/${nav.id}` : null;
     if (!nav.disabled) {
       navigate(destination);
     }

@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "../style";
 import Navbar2 from "./Navbar2";
-import { navLinksClients } from "../constants";
-import { Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import SignBlocks from "./SignBlocks";
 
@@ -50,6 +49,8 @@ const Card = ({ salonData }) => {
 
 const Featured = () => {
   const [topSalons, setTopSalons] = useState([]);
+  const [filteredSalons, setFilteredSalons] = useState([]);
+  const [searchText, setSearchText] = useState("");
   const [user, setUser] = useState(null);
   const [cookies] = useCookies(["access_token"]);
   const navigate = useNavigate();
@@ -98,6 +99,14 @@ const Featured = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    // Filtriranje salona na temelju unesenog teksta
+    const filtered = topSalons.filter((salon) =>
+      salon.name.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setFilteredSalons(filtered);
+  }, [searchText, topSalons]);
+
   return (
     <div className="bg-primary w-full overflow-hidden">
       <div className={`${styles.paddingX} ${styles.flexCenter}`}>
@@ -110,11 +119,19 @@ const Featured = () => {
       <div className={`bg-primary ${styles.flexStart}`}>
         <div className={`${styles.boxWidth} mt-10`}>
           <h2 className={`${styles.heading2} text-center`}>POPULARNI SALONI</h2>
+          {/* Pretraživač salona */}
+          <input
+            type="text"
+            placeholder="Pretraži salone..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            className="block w-full p-2 border border-gray-300 rounded-md mb-6"
+          />
           <div
             id="home"
             className={`grid grid-cols-1 md:grid-cols-3 gap-6 items-center justify-center ${styles.paddingY}`}
           >
-            {topSalons.map((salon) => (
+            {filteredSalons.map((salon) => (
               <Card key={salon._id} salonData={salon} />
             ))}
           </div>

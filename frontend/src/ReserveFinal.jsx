@@ -70,12 +70,14 @@ const ReserveFinal = () => {
 
 
   const makeReservation = async () => {
-    try {
+     try {
       // Ovdje zamijenite URL-om i podacima koje trebate poslati u zahtjevu
-      const response = await axios.post("YOUR_API_ENDPOINT", {
+      const response = await axios.post("http://localhost:8800/api/reservation", {
         selectedWorker,
         selectedService,
         selectedTime,
+        salonData,
+        user,
         // Dodajte ostale potrebne podatke za rezervaciju
       });
       // Obrada odgovora ako je potrebno
@@ -83,7 +85,9 @@ const ReserveFinal = () => {
     } catch (error) {
       // Obrada greške ako je potrebno
       console.error("Error making reservation:", error);
-    }
+    } 
+    console.log( "selectedDate " + selectedDate + "selected time " + selectedTime +
+     "service "+ selectedService._id + "worker " +  selectedWorker._id +  "salonID " + salonData._id)
   };
 
 

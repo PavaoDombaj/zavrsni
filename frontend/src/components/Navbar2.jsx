@@ -36,12 +36,14 @@ const Navbar2 = () => {
 
   const navLinks = [
     { id: 1, title: "Partneri", path: "/" },
-    { id: 2, title: "Home" },
+    { id: 2, title: "Home",},
     user
       ? { id: 3, title: "Profil", path: "/clients/profile" } // Dodajte profilnu stranicu ako je korisnik prijavljen
       : { id: 3, title: "Prijavi se", path: "/clients/login" },
-    !user ? { id: 4, title: "Registracija", path: "/clients/register" } : {title: "Odjavi se" }, // TODO ODJAVI SE Dodajte registraciju ako korisnik nije prijavljen
+    !user ? { id: 4, title: "Registracija", path: "/clients/register" } : { id: 4, title: "Odjavi se" }, // TODO ODJAVI SE Dodajte registraciju ako korisnik nije prijavljen
+    user ? { id: 5, title: "Moje rezervacije", path: "/clients/reservations"} : null , 
   ].filter((nav) => nav); // Filtrirajte null vrijednosti
+
 
   return (
     <nav className="w-full flex py-6 justify-between items-center navbar">

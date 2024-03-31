@@ -12,6 +12,7 @@ import Reserve from "./Reserve";
 import ReserveTime from "./ReserveTime";
 import Dashboard from "./Dashboard";
 import ReserveFinal from "./ReserveFinal"
+import MyReservations from "./MyReservations";
 import { SalonDashboard } from "./components";
 
 const SalonRoutes = () => {
@@ -23,6 +24,7 @@ const SalonRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Registration />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/reservations" element={<MyReservations />} />
         <Route path="/salon/:id" element={<SalonPage />} />
         <Route path="/salon/:id/reserve" element={<Reserve />} />
         <Route path="/salon/:id/reserve/time" element={<ReserveTime />} />

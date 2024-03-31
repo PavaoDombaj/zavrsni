@@ -81,12 +81,14 @@ export const deleteService = async (req, res, next) => {
 
 export const getService = async (req, res, next) => {
   try {
-    const Service = await Service.findById(req.params.id);
-    res.status(200).json(Service);
+    const foundService = await Service.findById(req.params.id);
+
+    res.status(200).json(foundService);
   } catch (err) {
     next(err);
   }
 };
+
 
 export const getServices = async (req, res, next) => {
   try {
