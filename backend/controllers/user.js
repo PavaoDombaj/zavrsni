@@ -2,17 +2,31 @@ import User from "../models/User.js";
 
 export const updateUser = async (req, res, next) => {
   try {
-    const updatedUser = await User.findByIdAndUpdate(
+    // Dobiti trenutne podatke korisnika iz baze
+    const existingUser = await User.findById(req.params.id);
+
+    // Ako korisnik ne postoji, vratite odgovarajući odgovor
+    if (!existingUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Spojite postojeće podatke korisnika s novim podacima iz zahtjeva
+    const updatedUser = { ...existingUser.toObject(), ...req.body };
+
+    // Ažurirajte korisnika s novim podacima
+    const result = await User.findByIdAndUpdate(
       req.params.id,
-      { $set: req.body },
+      updatedUser,
       { new: true }
     );
-    console.log("Updatean user");
-    res.status(200).json(updatedUser);
+
+    // Vratite ažuriranog korisnika kao odgovor
+    res.status(200).json(result);
   } catch (err) {
     next(err);
   }
 };
+
 
 export const deleteUser = async (req, res, next) => {
   try {

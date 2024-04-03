@@ -60,19 +60,19 @@ const Featured = () => {
       try {
         const response = await axios.get("http://localhost:8800/api/salons", {
           params: {
-            sortBy: "rating",
+            sortBy: "-rating", // Sortiraj po ocjeni od najviše do najniže
             limit: 3,
           },
         });
-
+  
         setTopSalons(response.data);
       } catch (error) {
         console.error("Error fetching top salons data:", error);
       }
     };
-
+  
     fetchData();
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -106,6 +106,7 @@ const Featured = () => {
     );
     setFilteredSalons(filtered);
   }, [searchText, topSalons]);
+  
 
   return (
     <div className="bg-primary w-full overflow-hidden">

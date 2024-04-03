@@ -51,7 +51,6 @@ export const register = async (req, res, next) => {
   }
 };
 
-
 export const login = async (req, res, next) => {
   try {
     const user = await User.findOne({
@@ -97,5 +96,18 @@ export const login = async (req, res, next) => {
     console.log("Access token " + token);
   } catch (err) {
     next(err);
+  }
+};
+export const logout = async (req, res, next) => {
+  try {
+    // Brišemo cookie access_token
+    res.clearCookie('access_token');
+    
+    // Vraćamo uspješan odgovor
+    res.status(200).json({ success: true, message: 'User logged out successfully' });
+  } catch (error) {
+    // Uhvatimo i obradimo bilo kakvu grešku
+    console.error('Error logging out:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };

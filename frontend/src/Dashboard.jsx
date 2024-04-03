@@ -84,7 +84,26 @@ const Dashboard = () => {
   }, []);
 
   if (!user || !user.isAdmin) {
-    return <div> NISI ADMIN</div>;
+    return <div
+    className={`${styles.marginX} bg-neutral-200 p-5 w-[1000px] rounded-[10px] hover:bg-neutral-300 transition cursor-pointer flex flex-col justify-center items-center`}
+  >
+    {/* Registracija blok */}
+    <Link to="/clients">
+    <div className="flex-grow">
+      <h2
+        className={`${styles.heading2} mb-3 text-center text-slate-800`}
+      >
+        NISTE OVLASTENI
+      </h2>
+      <p className={`${styles.paragraph} text-center text-slate-700`}>
+        za pristup dashboardu morate biti admin ili vlasnik salona
+      </p>
+      <p className={`${styles.paragraph} text-center text-red-700`}>
+        klikom se vrati na stranicu salona
+      </p>
+    </div>
+    </Link>
+  </div>;
   }
 
   return (

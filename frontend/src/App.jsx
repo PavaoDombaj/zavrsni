@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./Home";
 import Clients from "./Clients";
 import Featured from "./components/Featured";
+import Prices from "./components/Prices";
 import Profile from "./Profile";
 import "./index.css";
 import Registration from "./Registration";
@@ -13,6 +14,7 @@ import ReserveTime from "./ReserveTime";
 import Dashboard from "./Dashboard";
 import ReserveFinal from "./ReserveFinal"
 import MyReservations from "./MyReservations";
+
 import { SalonDashboard } from "./components";
 
 const SalonRoutes = () => {
@@ -40,6 +42,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/clients/*" element={<SalonRoutes />} />
+        <Route path="/prices" element={<Prices />} />
         <Route path="/partner/dashboard" element={<Dashboard />} />
         <Route path="/partner/dashboard/salon" element={<SalonDashboard />} />
         

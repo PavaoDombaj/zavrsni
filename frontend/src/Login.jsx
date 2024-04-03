@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { booklyAuth } from "./assets";
@@ -10,12 +10,37 @@ export default function Login() {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [cookies, setCookie] = useCookies(['access_token']);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8800/api/auth/checkToken",
+          {
+            withCredentials: true,
+          }
+        );
+
+        // Postavite korisnika ako je prijavljen, inače postavite na null
+        setUser(response.data.user || null);
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          // Ako je 401 Unauthorized, korisnik nije prijavljen
+          setUser(null);
+        } else {
+          console.error("Error fetching auth token:", error);
+        }
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -56,6 +81,22 @@ export default function Login() {
       // Handle login error (display error message, etc.)
     }
   };
+
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:8800/api/auth/logout", null, {
+        withCredentials: true,
+      });
+
+      // Očisti korisničke podatke iz stanja nakon odjave
+      setUser(null);
+
+      // Osvježi stranicu kako bi se primijenile promjene
+      window.location.reload();
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
   
 
   const handleChange = (e) => {
@@ -69,6 +110,7 @@ export default function Login() {
     <div>
       <div className="flex flex-col items-center min-h-screen pt-6 sm:justify-center sm:pt-0 bg-primary">
         <div className="w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md sm:max-w-md sm:rounded-lg">
+        
           <div>
             <a href="/">
               <img
@@ -78,6 +120,7 @@ export default function Login() {
               ></img>
             </a>
           </div>
+          {!user && (
           <form onSubmit={handleLogin}>
             <div className="mt-4">
               <label
@@ -146,7 +189,16 @@ export default function Login() {
                 Login
               </button>
             </div>
+        
           </form>
+          )}
+          {user &&(
+            <div>
+              <p className="mb-5 font-poppins font-xl">Vec ste prijavljeni</p>
+              <a href="/clients" className="btn bg-blue-500 p-3 rounded-lg font-semibold"> Povratak </a>
+              <button onClick={handleLogout} className="btn bg-red-600 p-3 rounded-lg ml-4 font-semibold">Odjava</button>
+            </div>
+          )}
         </div>
       </div>
     </div>

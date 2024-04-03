@@ -88,7 +88,7 @@ export const createSalon = async (req, res, next) => {
 export const updateSalon = async (req, res, next) => { /// TODO treba obavezno provjerit
   try {
     console.log(req.user);
-
+    console.log('Primljeni podaci:', req.body); 
     let existingUser;
 
     // Provjeri postoji li ownerId u owner objektu
