@@ -90,10 +90,25 @@ export const createReservation = async (req, res, next) => {
   }
 };
 
-export const updateReservation = async (req, res, next) => {
-  /// TODO treba obavezno provjerit
-};
+export const updateReservation= async (req, res, next) => {
+  try {
+    const Reservation = await Reservation.findById(req.params.id);
 
+    if (!Reservation) {
+      return res.status(404).json({ message: "Reservation not found" });
+    }
+
+    const updatedReservation= await Reservation.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true }
+    );
+
+    res.status(200).json(updatedReservation);
+  } catch (err) {
+    next(err);
+  }
+}
 export const deleteReservation = async (req, res, next) => {
   try {
     console.log("user id: " + req.user.id);
@@ -245,6 +260,32 @@ export const getUserReservations = async (req, res, next) => {
     // Dohvatite sve rezervacije korisnika s odgovarajućim ID-om
     const reservations = await Reservation.find({ userId: userId });
     console.log("Reservations found for user:", reservations);
+    
+    const currentTime = new Date();
+
+    // Podijelite rezervacije na one koje su u budućnosti i one koje su već prošle
+    const futureReservations = reservations.filter(reservation => new Date(reservation.reservationTime) > currentTime);
+    const pastReservations = reservations.filter(reservation => new Date(reservation.reservationTime) <= currentTime);
+
+    res.status(200).json({ futureReservations, pastReservations });
+  } catch (error) {
+    // Uhvatite i obradite grešku ako se dogodi
+    console.error("Error occurred while fetching user reservations:", error);
+    next(error);
+  }
+};
+
+export const getWorkerReservations = async (req, res, next) => {
+  try {
+    console.log("Request received for user ID:", req.params.workerId);
+
+    const workerId = req.params.workerId;
+    console.log("User ID extracted from request:", workerId);
+
+    // Dohvatite sve rezervacije korisnika s odgovarajućim ID-om
+    const reservations = await Reservation.find({ workerId: workerId });
+    console.log("Reservations found for user:", reservations);
+    
 
     res.status(200).json(reservations);
   } catch (error) {

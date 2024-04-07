@@ -1,6 +1,7 @@
 import Salon from "../models/Salon.js";
 import User from "../models/User.js";
 import Worker from "../models/Worker.js";
+import Reservation from "../models/Reservation.js"
 
 export const createSalon = async (req, res, next) => {
   //trebalo bi biti u fullu gotovo
@@ -177,11 +178,42 @@ export const getSalon = async (req, res, next) => {
   }
 };
 
+// Backend kod
 export const getSalons = async (req, res, next) => {
   try {
-    const salons = await Salon.find();
+    // Dodajte sortiranje po ocjeni (-rating)
+    const salons = await Salon.find().sort({ rating: -1 }); // -1 za silazno sortiranje
     res.status(200).json(salons);
   } catch (err) {
     next(err);
+  }
+};
+
+
+export const SalonStats = async (req, res, next) => {
+  try {
+    console.log("starttttttttttt")
+    console.log(req.params.salonId)
+    const salonId = req.params.salonId
+
+    // Dobivanje svih rezervacija u salonu
+    const reservations = await Reservation.find({ salonId: salonId });
+
+    // Pratimo prisustvo korisnika u rezervacijama
+    const userPresence = {};
+    reservations.forEach((reservation) => {
+      userPresence[reservation.userId] = true;
+    });
+
+    // Broj korisnika koji su napravili barem jednu rezervaciju
+    const numberOfUsers = Object.keys(userPresence).length;
+
+    // Dobivanje ukupnog broja rezervacija u salonu
+    const totalReservations = reservations.length;
+
+    res.status(200).json({ numberOfUsers, totalReservations });
+  } catch (error) {
+    console.error('Error getting salon statistics:', error);
+    next(error);
   }
 };

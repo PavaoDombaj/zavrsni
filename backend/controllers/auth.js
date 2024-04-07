@@ -7,33 +7,31 @@ export const register = async (req, res, next) => {
   try {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
-
-    let username = ""; // Declare the variable outside the if-else block
+    let username = "";
 
     if (!req.body.username || req.body.username === null) {
-      console.log("Nema username");
       const nameParts = req.body.name.split(" ");
-
       if (nameParts.length > 1) {
         username = nameParts.join("").toLowerCase();
       } else {
-        // Ako imate samo jedno ime, stavi to ime samo lowercase
         username = `${nameParts[0].toLowerCase()}`;
       }
-
-      // Provjeri postoji li korisnik s istim imenom u bazi
-      const existingUser = await User.findOne({ username });
-
-      // Ako postoji, dodaj random slovo na kraj korisničkog imena
-      if (existingUser) {
+      // Provjeri postoji li korisnik s istim usernamom u bazi
+      let existingUser = await User.findOne({ username });
+      // Ako postoji, dodaj random broj na kraj korisničkog imena
+      while (existingUser) {
         const randomNum = Math.floor(10 + Math.random() * 90);
         username = `${username}${randomNum}`;
+        existingUser = await User.findOne({ username }); // Provjeri ponovno s novim usernameom
       }
-
-      console.log(username);
     } else {
-      // Assign the value to the existing username variable
       username = req.body.username;
+    }
+
+    // Provjeri postoji li korisnik s istom e-poštom u bazi
+    const existingEmail = await User.findOne({ email: req.body.email });
+    if (existingEmail) {
+      return res.status(400).send("Email is already registered.");
     }
 
     const newUser = new User({
@@ -50,6 +48,8 @@ export const register = async (req, res, next) => {
     next(err);
   }
 };
+
+
 
 export const login = async (req, res, next) => {
   try {
@@ -68,8 +68,8 @@ export const login = async (req, res, next) => {
     );
 
     if (!isPasswordCorrect) {
-      // Invalid password or username
-      return next(createError(400, "Invalid password or username"));
+      // Kriva zaporka ili email
+      return next(createError(400, "Invalid password or email"));
     }
 
     // Sign the JWT token

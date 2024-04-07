@@ -32,7 +32,7 @@ router.put("/:id",updateUser, verifyUser);
 router.delete("/:id", verifyUser, deleteWorker, deleteUser);
 
 // GET
-router.get("/:id", getUser, verifyUser);/* TO DO Ako želite da se podaci dobiveni u 
+router.get("/:id", getUser);/* TO DO Ako želite da se podaci dobiveni u 
 funkciji getUser koriste kao odgovor, a ne podaci dobiveni u verifyToken, 
 onda morate promijeniti redoslijed middlewareova u vašem putu. 
 Stavite verifyUser nakon getUser kako bi se getUser izvršila prije i koristila svoj odgovor. Evo 

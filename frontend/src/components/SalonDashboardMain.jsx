@@ -9,6 +9,7 @@ import {
   faStore,
   faUsers,
   faTable,
+  faStar,
   faEye,
   faBriefcase,
   faCalendarCheck,
@@ -18,14 +19,12 @@ import {
 import SignBlocks from "./SignBlocks";
 import styles from "../style";
 
-const SalonDashboardSalon = () => {
+const SalonDashboardMain = () => {
   const [user, setUser] = useState(null);
   const [salon, setSalon] = useState(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    locationAddress: "",
-    locationCity: "",
-  });
+  const [usersCount, setUsersCount] = useState(null)
+  const [reservationCount, setReservationCount] = useState(null)
+  
 
   let pristup = false;
 
@@ -149,34 +148,32 @@ const SalonDashboardSalon = () => {
     fetchSalonsAndUsers();
   }, [user]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        console.log("salon id _ " + salon._id)
+        const response = await axios.get(
+            `http://localhost:8800/api/salons/stats/${salon._id}`,
+          {
+            withCredentials: true,
+          }
+        );
+        console.log(response.data.numberOfUsers)
+        // Dobijte broj korisnika iz odgovora i postavite ga u stanje
+        setUsersCount(response.data.numberOfUsers);
+        setReservationCount(response.data.totalReservations)
+      } catch (error) {
+        console.error("Error fetching user count:", error);
+      }
+    };
 
-    try {
-      const response = await axios.put(
-        `http://localhost:8800/api/salons/${salon._id}`,
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+    fetchData();
+  }, [salon]);
 
-      console.log("Salon updated successfully:", response.data);
-      window.location.reload();
-    } catch (error) {
-      console.error("Error updating salon:", error);
-    }
-  };
 
-  if (!salon) {
+
+  if (!salon || !usersCount || !reservationCount) {
     return <div>Loading...</div>;
   }
   if (user.id === salon.owner.ownerId) {
@@ -185,79 +182,57 @@ const SalonDashboardSalon = () => {
   }
 
   return (
-        <div className="bg-gray-900 rounded-[20px] h-full p-8">
-          <p className="font-poppins text-[20px] text-white">
-            {salon.name} | Owner: {salon.owner.name}
-          </p>
-          <div className="bg-white flex flex-col rounded-[10px] p-6">
-            <div className="flex flex-row">
-              <FontAwesomeIcon icon={faPenToSquare} />
-              <p className="font-poppins font-bold text-[20px] text-gray-700">
-                UPDATE SALON
+    <div className="bg-gray-900 rounded-[20px] h-full p-8">
+      <p className="font-poppins text-[20px] text-white">
+        {salon.name} | Owner: {salon.owner.name}
+      </p>
+      <div className="flex flex-row">
+        {[
+          {
+            title: "Clients",
+            count: usersCount,
+            icon: faUsers,
+            color: "text-green-700",
+          },
+          {
+            title: "Rezervacija",
+            count: reservationCount,
+            icon: faCalendarCheck,
+            color: "text-red-500",
+          },
+          {
+            title: "Rating",
+            count: salon.rating,
+            icon: faStar,
+            color: "text-yellow-500",
+          },
+        ].map((item, index) => (
+          <div
+            key={index}
+            className={`flex flex-row mt-4 mb-4 bg-white rounded-[10px] p-4 flex-grow ${
+              index > 0 ? "ml-5" : ""
+            }`}
+          >
+            <div className="w-2/3 flex flex-col items-start">
+              <p className="font-poppins font-normal text-gray-700 text-[30px] leading-[20px] mb-6">
+                {item.title}
+              </p>
+              <p className="font-poppins font-bold text-gray-700 text-[30px] leading-[20px]">
+                {item.count}
               </p>
             </div>
-            <form onSubmit={handleSubmit}>
-              <div className="mt-4 flex flex-col">
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-gray-700 undefined"
-                >
-                  Salon name
-                </label>
-                <div className="flex flex-col items-start">
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    placeholder={salon.name}
-                    onChange={handleInputChange}
-                    className="block w-full mt-1 border-gray-300 rounded-md shadow-sm
-                   focus:border-indigo-300 focus:ring focus:ring-indigo-200 
-                   focus:ring-opacity-50 bg-neutral-200"
-                  />
-                </div>
-              </div>
-              <div className="mt-4 flex flex-col">
-                <label
-                  htmlFor="locationAddress"
-                  className="block text-sm font-medium text-gray-700 undefined"
-                >
-                  Salon location
-                </label>
-                <div className="flex flex-col items-start">
-                  <input
-                    type="text"
-                    name="locationAddress"
-                    value={formData.locationAddress}
-                    placeholder={salon.location.address}
-                    onChange={handleInputChange}
-                    className="block w-full mt-1 border-gray-300 rounded-md shadow-sm
-                   focus:border-indigo-300 focus:ring focus:ring-indigo-200 
-                   focus:ring-opacity-50 bg-neutral-200"
-                  />
-                  <input
-                    type="text"
-                    name="locationCity"
-                    value={formData.locationCity}
-                    onChange={handleInputChange}
-                    placeholder={salon.location.city}
-                    className="block w-full mt-1 border-gray-300 rounded-md shadow-sm
-                   focus:border-indigo-300 focus:ring focus:ring-indigo-200 
-                   focus:ring-opacity-50 bg-neutral-200"
-                  />
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-2 mt-4 rounded hover:bg-blue-600"
-              >
-                Update Salon
-              </button>
-            </form>
+            <div className="w-1/3 flex flex-col items-end">
+              <FontAwesomeIcon icon={faEye} className={`mb-3 text-gray-700`} />
+              <FontAwesomeIcon
+                icon={item.icon}
+                className={`${item.color} text-[40px]`}
+              />
+            </div>
           </div>
-        </div>
+        ))}
+      </div>
+    </div>
   );
 };
 
-export default SalonDashboardSalon;
+export default SalonDashboardMain;

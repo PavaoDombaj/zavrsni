@@ -48,7 +48,7 @@ const Navbar2 = () => {
 
   const navLinks = [
     { id: 1, title: "Partneri", path: "/" },
-    { id: 2, title: "Home" },
+    { id: 2, title: "Home", path: "/clients" },
     user ? { id: 3, title: "Profil", path: "/clients/profile" } : { id: 3, title: "Prijavi se", path: "/clients/login" },
     !user ? { id: 4, title: "Registracija", path: "/clients/register" } : { id: 4, title: "Odjavi se", onClick: handleLogout },
     user ? { id: 5, title: "Moje rezervacije", path: "/clients/reservations" } : null,

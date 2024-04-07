@@ -1,7 +1,17 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faUser, faHome, faStore, faUsers, faTable, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSearch,
+  faUser,
+  faHome,
+  faStore,
+  faUsers,
+  faTable,
+  faPenToSquare,
+} from "@fortawesome/free-solid-svg-icons";
 import SalonDashboardSalon from "./SalonDashboardSalon";
+import SalonDashboardMain from "./SalonDashboardMain";
+import SalonDashboardReservation from "./SalonDashboardReservation";
 const SalonDashboard = () => {
   const [selectedMenuItem, setSelectedMenuItem] = useState("Main"); // Stanje koje prati trenutno odabrani element izbornika
 
@@ -14,26 +24,14 @@ const SalonDashboard = () => {
   const renderContent = () => {
     switch (selectedMenuItem) {
       case "Main":
-        return (
-          <div>
-            {/* Main content za odabrani Main izbornik */}
-          </div>
-        );
+        return <SalonDashboardMain />;
       case "Salon":
-        return (
-          <SalonDashboardSalon/>
-        );
+        return <SalonDashboardSalon />;
       case "Users":
-        return (
-          <div>
-            {/* Main content za odabrani Users izbornik */}
-          </div>
-        );
+        return <div>{/* Main content za odabrani Users izbornik */}</div>;
       case "Reservations":
         return (
-          <div>
-            {/* Main content za odabrani Reservations izbornik */}
-          </div>
+          <SalonDashboardReservation/>
         );
       default:
         return null;
@@ -54,7 +52,9 @@ const SalonDashboard = () => {
             <div
               key={index}
               onClick={() => handleMenuItemClick(item.text)} // Poziv funkcije za promjenu odabranog elementa izbornika na klik
-              className={`text-white text-lg flex items-center space-x-2 cursor-pointer ${selectedMenuItem === item.text ? 'bg-gray-700' : ''}`}
+              className={`text-white text-lg flex items-center space-x-2 cursor-pointer ${
+                selectedMenuItem === item.text ? "bg-gray-700 p-2" : ""
+              }`}
             >
               <FontAwesomeIcon icon={item.icon} />
               <span>{item.text}</span>
@@ -67,7 +67,7 @@ const SalonDashboard = () => {
       <div className="flex-grow bg-gray-100">
         {/* Navbar */}
         <nav className="bg-gray-800 text-white py-4 px-6 flex justify-between items-center ">
-          <div className="text-xl font-bold">Bookly Dashboard</div>
+          <div className="text-xl font-bold">Bookly Dashboard [PARTNER]</div>
           <div className="flex">
             <input
               type="text"
@@ -82,7 +82,7 @@ const SalonDashboard = () => {
             <FontAwesomeIcon icon={faUser} />
           </div>
         </nav>
-        
+
         {/* Main dashboard content */}
         <div className="bg-gray-900 rounded-[20px] h-full p-8">
           {/* Renderiranje odgovarajućeg sadržaja */}

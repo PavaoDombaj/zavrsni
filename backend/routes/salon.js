@@ -8,6 +8,7 @@ import {
   deleteSalon,
   getSalon,
   getSalons,
+  SalonStats,
 } from "../controllers/salon.js";
 import { verifyAdmin, verifyWorker } from "../utils/verifyToken.js";
 
@@ -27,5 +28,8 @@ router.get("/:id", getSalon);
 
 // GET ALL
 router.get("/", getSalons);
+
+// SalonStats
+router.get("/stats/:salonId", SalonStats)
 
 export default router;

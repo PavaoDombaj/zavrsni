@@ -20,13 +20,6 @@ const App = () => (
       <div className={`${styles.boxWidth}`}>
         <Stats />
         <Business />
-        <div className="bg-secondary h-[600px] flex items-center"> {/*privremeno */}
-          <p  className="text-slate-300 text-4xl font-poppins">OSTALO</p>
-        </div>
-        {/*<Billing />
-        <CardDeal />
-        <Testimonials />
-        <Clients />*/}
         <CTA /> 
         <Footer />
       </div>

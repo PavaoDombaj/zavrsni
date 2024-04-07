@@ -61,7 +61,7 @@ const Featured = () => {
         const response = await axios.get("http://localhost:8800/api/salons", {
           params: {
             sortBy: "-rating", // Sortiraj po ocjeni od najviše do najniže
-            limit: 3,
+            limit: 3, // uzmi samo 3 salona
           },
         });
   

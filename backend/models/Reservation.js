@@ -29,6 +29,16 @@ const ReservationSchema = new mongoose.Schema({
   durationMinutes:{
     type:Number,
     required:true,
+  },
+  dosao:{
+    type:Boolean,
+    default: null,
+  },
+  rating:{
+    type: Number,
+    min: 0,
+    max: 5,
+    
   }
 });
 

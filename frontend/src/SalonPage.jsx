@@ -28,7 +28,7 @@ const SalonPage = () => {
   }, [id]);
 
   if (!salonData) {
-    // Loading state, you can render a loading spinner or message here
+    // Loading state
     return <p>Loading...</p>;
   }
 

@@ -75,7 +75,7 @@ export const features = [
     icon: shield,
     title: "Praćenje statistike",
     content:
-      "Iskoristite naš najsuvremeniji dashboard za detaljno praćenje dolazaka i klijenata vašeg salona.",
+      "Iskoristite naš dashboard za detaljno praćenje dolazaka i klijenata vašeg salona.",
   },
   {
     id: "feature-3",

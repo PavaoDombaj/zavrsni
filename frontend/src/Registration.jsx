@@ -26,10 +26,10 @@ export default function Registration() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the default form submission
+    e.preventDefault(); 
 
     if (formData.password !== formData.password_confirmation) {
-      // Passwords don't match, display an error message or prevent the form submission
+      // Zaporke se ne poklapaju, prikazi poruku greške
       console.error("Passwords do not match");
       setAlertMessage("Passwords do not match");
       setShowAlert(true);
@@ -58,30 +58,19 @@ export default function Registration() {
 
         const token = response.data.access_token;
 
-        // Postavite kolačić na cijeli site
-        // setCookie('access_token', token, { path: '/' });
-
-        console.log("Auth token: ", token);
-
-        console.log("Login successful", response.data);
         setAlertMessage("Login successful");
         setShowAlert(true);
 
-        // Koristite navigate za preusmjeravanje
         // Odgodi preusmjeravanje nakon 2 sekundi
         setTimeout(() => {
-          // Koristite navigate funkciju za preusmjeravanje
+          // navigate funkcija za preusmjeravanje
           navigate("/clients");
         }, 2000);
-
-        // Handle successful login (redirect, show success message, etc.)
       } catch (error) {
         console.error("Login error", error.response.data);
         setAlertMessage("Invalid credentials. Please try again.");
         setShowAlert(true);
-        // Handle login error (display error message, etc.)
       }
-
       return;
     } catch (error) {
       console.error("Registration error", error.response.data);
@@ -202,7 +191,7 @@ export default function Registration() {
               </div>
             </div>
 
-            {/* Dodajte uvjetni paragraf za prikaz poruke o grešci */}
+            {/* Didatni uvjetni paragraf za prikaz poruke o grešci */}
             {showAlert && (
               <p
                 className={

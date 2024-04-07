@@ -112,9 +112,6 @@ const ReserveTime = () => {
           <NavbarReserve salonName={salonData.name} step={2} />
         )}
       </div>
-      <h2 className="text-white">Confirmation</h2>
-      <p className="text-white">Selected Worker: {selectedWorker.name}</p>
-      <p className="text-white">Selected Service: {selectedService.name}</p>
       <div className="m-5">
         <div className="flex bg-white mt-5 rounded-[20px]">
           <div className="w-7/12 p-6 border-2 border-red-900">
@@ -124,26 +121,32 @@ const ReserveTime = () => {
             </h2>
             <div className="flex flex-col">
               <div className="flex flex-col items-center">
-                <div style={{ marginRight: "20px" }}></div>
-                <DatePicker
-                  selected={selectedDate}
-                  onChange={setSelectedDate}
-                  minDate={new Date()}
-                  inline
-                />
+                <div className="mb-4">
+                  <DatePicker
+                     selected={selectedDate}
+                     onChange={setSelectedDate}
+                     minDate={new Date()}
+                     inline
+                     className="border p-2 rounded-md" 
+                   />
+                </div>
               </div>
               {selectedDate && availableTimes && (
-                <div>
-                  <h2>Available Times</h2>
+                <div className="mt-4 grid grid-cols-4 gap-4">
+                  <h2 className="text-lg font-bold mb-2 col-span-full">
+                    Available Times
+                  </h2>
                   {availableTimes.map((time, index) => (
-                    <li className="mb-2 hover:bg-slate-400" key={index}>
-                      <button onClick={() => handleChange(time)}>
-                        {new Date(time).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </button>
-                    </li>
+                    <button
+                      key={index}
+                      onClick={() => handleChange(time)}
+                      className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
+                    >
+                      {new Date(time).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </button>
                   ))}
                 </div>
               )}
@@ -221,7 +224,12 @@ const ReserveTime = () => {
                       <div>
                         <Link
                           to={`/clients/salon/${id}/reserve/final`}
-                          state={{ selectedWorker, selectedService, selectedDate, selectedTime }}
+                          state={{
+                            selectedWorker,
+                            selectedService,
+                            selectedDate,
+                            selectedTime,
+                          }}
                           className="btn inline-flex items-center justify-center px-4 py-2 mt-5 text-s font-semibold 
                           tracking-widest text-white transition duration-150 ease-in-out bg-gray-900 border border-transparent 
                           rounded-md hover:bg-fuchsia-900"
