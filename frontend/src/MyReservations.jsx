@@ -4,6 +4,12 @@ import styles from "./style";
 import Navbar2 from "./components/Navbar2";
 import SignBlocks from "./components/SignBlocks";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faClockRotateLeft,
+} from "@fortawesome/free-solid-svg-icons";
+
+
 const MyReservations = () => {
   const [userData, setUserData] = useState(null);
   const [userReservations, setUserReservations] = useState([]);
@@ -106,6 +112,7 @@ const MyReservations = () => {
           );
 
           setUserReservationsPast(pastReservationsWithDetails);
+          console.log(pastReservationsWithDetails);
         }
       } catch (error) {
         console.log(error);
@@ -171,19 +178,30 @@ const MyReservations = () => {
                   key={reservation._id}
                 >
                   <div className="flex items-center mb-2">
-                    <img
-                      src={reservation.salon.images[1]}
-                      alt={reservation.salon.name}
-                      className="w-16 h-16 mr-4"
-                    />
+                    {reservation.salon &&
+                    reservation.salon.images &&
+                    reservation.salon.images[1] ? (
+                      <img
+                        src={reservation.salon.images[1]}
+                        alt={reservation.salon.name}
+                        className="w-16 h-16 mr-4"
+                      />
+                    ) : (
+                      <div className="w-16 h-16 mr-4 bg-gray-300 rounded-full"></div>
+                    )}
+
                     <div>
-                      <p className="font-poppins font-semibold">
-                        {reservation.salon.name}
-                      </p>
-                      <p>
-                        {reservation.salon.location.address},{" "}
-                        {reservation.salon.location.city}
-                      </p>
+                      {reservation.salon && (
+                        <p className="font-poppins font-semibold">
+                          {reservation.salon.name}
+                        </p>
+                      )}
+                      {reservation.salon && reservation.salon.location && (
+                        <p>
+                          {reservation.salon.location.address},{" "}
+                          {reservation.salon.location.city}
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-center mb-2">
@@ -198,15 +216,29 @@ const MyReservations = () => {
                     </div>
                     <div>
                       <p className="font-semibold">Radnik:</p>
-                      <p>{reservation.worker.name}</p>
+                      {reservation.worker && <p>{reservation.worker.name}</p>}
                     </div>
                     <div className="ml-5">
                       <p className="font-semibold">Vrijeme rezervacije</p>
                       <p className="bg-blue-400 p-2 rounded-xl">
                         {new Date(reservation.reservationTime).toLocaleString()}
                       </p>
-                      {reservation.dosao && ( ///TODO dovrsi
-                        <div>
+                    </div >
+                    <div className="ml-5">
+                      <p className="font-semibold">Došao</p>
+                    {/*{reservation.dosao && (
+                        <div className="ml-5">
+                          
+                          <select>
+                            <option value="1">1 Star</option>
+                            <option value="2">2 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <option value="4">4 Stars</option>
+                            <option value="5">5 Stars</option>
+                          </select>
+                        </div>
+                      )}*/}
+                    {reservation.dosao ? <div >
                           {/* Render rating component here */}
                           {/* For example: */}
                           <select>
@@ -216,10 +248,9 @@ const MyReservations = () => {
                             <option value="4">4 Stars</option>
                             <option value="5">5 Stars</option>
                           </select>
-                        </div>
-                      )}
-                    </div>
+                        </div> : reservation.dosao === false ? <p>ne</p> : <FontAwesomeIcon  className="text-orange-400 bg-gray-800 rounded-xl p-2"icon={faClockRotateLeft} />}
                   </div>
+                </div>
                 </div>
               ))}
             </div>

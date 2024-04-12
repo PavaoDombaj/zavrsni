@@ -21,6 +21,9 @@ import styles from "../style";
 const SalonDashboardSalon = () => {
   const [user, setUser] = useState(null);
   const [salon, setSalon] = useState(null);
+  const [selectedServiceId, setSelectedServiceId] = useState(null);
+  const [selectedService, setSelectedService] = useState(null);
+  const [services, setServices] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     locationAddress: "",
@@ -104,8 +107,6 @@ const SalonDashboardSalon = () => {
                   "http://localhost:8800/api/salons"
                 );
                 const allSalons = salonResponse.data;
-                console.log(allSalons);
-                console.log(user.id);
 
                 // Pronalazimo salon u kojem korisnik radi
                 const userSalon = allSalons.find((salon) =>
@@ -124,6 +125,16 @@ const SalonDashboardSalon = () => {
 
                   // Postavljamo salon u state
                   setSalon(salonDetail);
+                  try {
+                    const servicesResponse = await axios.get(
+                      `http://localhost:8800/api/services/salon/${userSalon._id}`,
+                      { withCredentials: true }
+                    );
+                    const services = servicesResponse.data;
+                    setServices(services);
+                  } catch (error) {
+                    console.error("Error fetching data:", error);
+                  }
                 } else {
                   console.log("Korisnik radi u nepoznatom salonu.");
                 }
@@ -149,30 +160,55 @@ const SalonDashboardSalon = () => {
     fetchSalonsAndUsers();
   }, [user]);
 
-  const handleInputChange = (e) => {
+  const handleSalonInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleServiceChange = async (e) => {
+    const serviceId = e.target.value;
+    setSelectedServiceId(serviceId);
+    const service = services.find((s) => s._id === serviceId);
+    setSelectedService(service);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.put(
-        `http://localhost:8800/api/salons/${salon._id}`,
-        formData,
+      if (selectedServiceId) {
+        const response = await axios.put(
+          `http://localhost:8800/api/services/${selectedServiceId}`,
+          selectedService,
+          { withCredentials: true }
+        );
+        console.log("Service updated successfully:", response.data);
+        window.location.reload();
+      } else {
+        const response = await axios.put(
+          `http://localhost:8800/api/salons/${salon._id}`,
+          formData,
+          { withCredentials: true }
+        );
+        console.log("Salon updated successfully:", response.data);
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error updating:", error);
+    }
+  };
+  const handleDeleteService = async () => {
+    try {
+      await axios.delete(
+        `http://localhost:8800/api/services/${selectedServiceId}`,
         {
           withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
         }
       );
-
-      console.log("Salon updated successfully:", response.data);
-      window.location.reload();
+      console.log("Service deleted successfully");
+      // Dodajte logiku za osvježavanje ili ponovno učitavanje podataka ako je potrebno
     } catch (error) {
-      console.error("Error updating salon:", error);
+      console.error("Error deleting service:", error);
     }
   };
 
@@ -184,79 +220,256 @@ const SalonDashboardSalon = () => {
     const gazda = true;
   }
 
+
+
   return (
-        <div className="bg-gray-900 rounded-[20px] h-full p-8">
-          <p className="font-poppins text-[20px] text-white">
-            {salon.name} | Owner: {salon.owner.name}
+    <div className="bg-gray-900 rounded-[20px] h-full p-8">
+      <p className="font-poppins text-[20px] text-white">
+        {salon.name} | Owner: {salon.owner.name}
+      </p>
+      <div className="bg-white flex flex-col rounded-[10px] p-6">
+        <div className="flex flex-row">
+          <FontAwesomeIcon icon={faPenToSquare} />
+          <p className="font-poppins font-bold text-[20px] text-gray-700">
+            UPDATE SALON
           </p>
-          <div className="bg-white flex flex-col rounded-[10px] p-6">
-            <div className="flex flex-row">
-              <FontAwesomeIcon icon={faPenToSquare} />
-              <p className="font-poppins font-bold text-[20px] text-gray-700">
-                UPDATE SALON
-              </p>
+        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="mt-4 flex flex-col">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700 undefined"
+            >
+              Salon name
+            </label>
+            <div className="flex flex-col items-start">
+              <input
+                type="text"
+                name="name"
+                value={formData.name || salon.name}
+                onChange={handleSalonInputChange}
+                className="block w-full mt-1 border-gray-300 rounded-md shadow-sm
+                focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-neutral-200"
+              />
             </div>
-            <form onSubmit={handleSubmit}>
+          </div>
+          <div className="mt-4 flex flex-col">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-700 undefined"
+            >
+              Salon description
+            </label>
+            <div className="flex flex-col items-start">
+              <textarea
+                name="description"
+                value={formData.description || salon.description}
+                onChange={handleSalonInputChange}
+                className="block w-full mt-1 border-gray-300 rounded-md shadow-sm
+                focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-neutral-200"
+              />
+            </div>
+          </div>
+          <div className="mt-4 flex flex-col">
+            <label
+              htmlFor="ownerName"
+              className="block text-sm font-medium text-gray-700 undefined"
+            >
+              Owner name
+            </label>
+            <div className="flex flex-col items-start">
+              <input
+                type="text"
+                name="ownerName"
+                value={formData.ownerName || salon.owner.name}
+                onChange={handleSalonInputChange}
+                className="block w-full mt-1 border-gray-300 rounded-md shadow-sm
+                focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-neutral-200"
+              />
+            </div>
+          </div>
+          <div className="mt-4 flex flex-col">
+            <label
+              htmlFor="locationAddress"
+              className="block text-sm font-medium text-gray-700 undefined"
+            >
+              Salon location
+            </label>
+            <div className="flex flex-col items-start">
+              <input
+                type="text"
+                name="locationAddress"
+                value={formData.locationAddress || salon.location.address}
+                onChange={handleSalonInputChange}
+                className="block w-full mt-1 border-gray-300 rounded-md shadow-sm
+                focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-neutral-200"
+              />
+              <input
+                type="text"
+                name="locationCity"
+                value={formData.locationCity || salon.location.city}
+                onChange={handleSalonInputChange}
+                className="block w-full mt-1 border-gray-300 rounded-md shadow-sm
+                focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-neutral-200"
+              />
+            </div>
+          </div>
+
+          {/* Dodajemo polje za unos radnog vremena */}
+          
+
+          <button
+            type="submit"
+            className="bg-blue-500 text-white px-4 py-2 mt-4 rounded hover:bg-blue-600"
+          >
+            Update Salon
+          </button>
+        </form>
+      </div>
+
+      <div className="bg-white flex flex-col rounded-[10px] p-6 mt-6">
+        <div className="flex flex-row">
+          <FontAwesomeIcon icon={faPenToSquare} />
+          <p className="font-poppins font-bold text-[20px] text-gray-700">
+            UPDATE SERVICES
+          </p>
+        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="mt-4 flex flex-col">
+            <label
+              htmlFor="service"
+              className="block text-sm font-medium text-gray-700 undefined"
+            >
+              Select Service:
+            </label>
+            <div className="flex flex-col items-start">
+              <select
+                name="service"
+                value={selectedServiceId}
+                onChange={handleServiceChange}
+                className="block w-full mt-1 border-gray-300 rounded-md shadow-sm
+                focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-neutral-200"
+              >
+                <option value="">Select a service</option>
+                {services.map((service) => (
+                  <option key={service._id} value={service._id}>
+                    {service.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          {selectedServiceId && (
+            <div>
               <div className="mt-4 flex flex-col">
                 <label
                   htmlFor="name"
                   className="block text-sm font-medium text-gray-700 undefined"
                 >
-                  Salon name
+                  Service name
                 </label>
                 <div className="flex flex-col items-start">
                   <input
                     type="text"
                     name="name"
-                    value={formData.name}
-                    placeholder={salon.name}
-                    onChange={handleInputChange}
+                    value={selectedService.name || ""}
+                    onChange={(e) =>
+                      setSelectedService({
+                        ...selectedService,
+                        name: e.target.value,
+                      })
+                    }
                     className="block w-full mt-1 border-gray-300 rounded-md shadow-sm
-                   focus:border-indigo-300 focus:ring focus:ring-indigo-200 
-                   focus:ring-opacity-50 bg-neutral-200"
+                    focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-neutral-200"
                   />
                 </div>
               </div>
               <div className="mt-4 flex flex-col">
                 <label
-                  htmlFor="locationAddress"
+                  htmlFor="description"
                   className="block text-sm font-medium text-gray-700 undefined"
                 >
-                  Salon location
+                  Service description
                 </label>
                 <div className="flex flex-col items-start">
-                  <input
-                    type="text"
-                    name="locationAddress"
-                    value={formData.locationAddress}
-                    placeholder={salon.location.address}
-                    onChange={handleInputChange}
+                  <textarea
+                    name="description"
+                    value={selectedService.description || ""}
+                    onChange={(e) =>
+                      setSelectedService({
+                        ...selectedService,
+                        description: e.target.value,
+                      })
+                    }
                     className="block w-full mt-1 border-gray-300 rounded-md shadow-sm
-                   focus:border-indigo-300 focus:ring focus:ring-indigo-200 
-                   focus:ring-opacity-50 bg-neutral-200"
-                  />
-                  <input
-                    type="text"
-                    name="locationCity"
-                    value={formData.locationCity}
-                    onChange={handleInputChange}
-                    placeholder={salon.location.city}
-                    className="block w-full mt-1 border-gray-300 rounded-md shadow-sm
-                   focus:border-indigo-300 focus:ring focus:ring-indigo-200 
-                   focus:ring-opacity-50 bg-neutral-200"
+                    focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-neutral-200"
                   />
                 </div>
               </div>
-
-              <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-2 mt-4 rounded hover:bg-blue-600"
-              >
-                Update Salon
-              </button>
-            </form>
-          </div>
-        </div>
+              <div className="mt-4 flex flex-col">
+                <label
+                  htmlFor="durationMinutes"
+                  className="block text-sm font-medium text-gray-700 undefined"
+                >
+                  Duration (minutes)
+                </label>
+                <div className="flex flex-col items-start">
+                  <input
+                    type="number"
+                    name="durationMinutes"
+                    value={selectedService.durationMinutes || ""}
+                    onChange={(e) =>
+                      setSelectedService({
+                        ...selectedService,
+                        durationMinutes: e.target.value,
+                      })
+                    }
+                    className="block w-full mt-1 border-gray-300 rounded-md shadow-sm
+                    focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-neutral-200"
+                  />
+                </div>
+              </div>
+              <div className="mt-4 flex flex-col">
+                <label
+                  htmlFor="price"
+                  className="block text-sm font-medium text-gray-700 undefined"
+                >
+                  Price
+                </label>
+                <div className="flex flex-col items-start">
+                  <input
+                    type="number"
+                    name="price"
+                    value={selectedService.price || ""}
+                    onChange={(e) =>
+                      setSelectedService({
+                        ...selectedService,
+                        price: e.target.value,
+                      })
+                    }
+                    className="block w-full mt-1 border-gray-300 rounded-md shadow-sm
+                    focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-neutral-200"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+          <button
+            type="submit"
+            className="bg-blue-500 text-white px-4 py-2 mt-4 rounded hover:bg-blue-600"
+          >
+            Update Service
+          </button>
+          <button
+            type="button"
+            onClick={handleDeleteService}
+            className="bg-red-500  ml-3 text-white px-4 py-2 mt-4 rounded hover:bg-red-600"
+          >
+            Delete Service
+          </button>
+        </form>
+      </div>
+    </div>
   );
 };
 

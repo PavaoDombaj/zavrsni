@@ -90,15 +90,17 @@ export const createReservation = async (req, res, next) => {
   }
 };
 
-export const updateReservation= async (req, res, next) => {
+export const updateReservation = async (req, res, next) => {
   try {
-    const Reservation = await Reservation.findById(req.params.id);
+    console.log("update reservation za " + req.params.id);
+    const reservation = await Reservation.findById(req.params.id);
+    console.log(req.body)
 
-    if (!Reservation) {
+    if (!reservation) {
       return res.status(404).json({ message: "Reservation not found" });
     }
 
-    const updatedReservation= await Reservation.findByIdAndUpdate(
+    const updatedReservation = await Reservation.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
       { new: true }
@@ -108,7 +110,7 @@ export const updateReservation= async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-}
+};
 export const deleteReservation = async (req, res, next) => {
   try {
     console.log("user id: " + req.user.id);
@@ -123,7 +125,7 @@ export const deleteReservation = async (req, res, next) => {
         .status(404)
         .json({ success: false, message: "Reservation not found" });
     }
-    console.log(reservation.userId.toString())
+    console.log(reservation.userId.toString());
 
     // Provjeri je li korisnik administrator ili vlasnik rezervacije
     if (req.user.isAdmin || reservation.userId.toString() === req.user.id) {
@@ -137,12 +139,10 @@ export const deleteReservation = async (req, res, next) => {
     } else {
       // Ako korisnik nije administrator niti vlasnik rezervacije, zabrani brisanje
       console.log("user not autherized");
-      return res
-        .status(403)
-        .json({
-          success: false,
-          message: "You are not authorized to delete this reservation",
-        });
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to delete this reservation",
+      });
     }
   } catch (err) {
     // Uhvati i obradi grešku ako se dogodi
@@ -252,20 +252,23 @@ export const getAvailableTimes = async (req, res, next) => {
 // Funkcija za dohvaćanje rezervacija korisnika
 export const getUserReservations = async (req, res, next) => {
   try {
-    console.log("Request received for user ID:", req.params.userId);
+    //console.log("Request received for user ID:", req.params.userId);
 
     const userId = req.params.userId;
-    console.log("User ID extracted from request:", userId);
+    //console.log("User ID extracted from request:", userId);
 
     // Dohvatite sve rezervacije korisnika s odgovarajućim ID-om
     const reservations = await Reservation.find({ userId: userId });
-    console.log("Reservations found for user:", reservations);
-    
+
     const currentTime = new Date();
 
     // Podijelite rezervacije na one koje su u budućnosti i one koje su već prošle
-    const futureReservations = reservations.filter(reservation => new Date(reservation.reservationTime) > currentTime);
-    const pastReservations = reservations.filter(reservation => new Date(reservation.reservationTime) <= currentTime);
+    const futureReservations = reservations.filter(
+      (reservation) => new Date(reservation.reservationTime) > currentTime
+    );
+    const pastReservations = reservations.filter(
+      (reservation) => new Date(reservation.reservationTime) <= currentTime
+    );
 
     res.status(200).json({ futureReservations, pastReservations });
   } catch (error) {
@@ -277,15 +280,15 @@ export const getUserReservations = async (req, res, next) => {
 
 export const getWorkerReservations = async (req, res, next) => {
   try {
-    console.log("Request received for user ID:", req.params.workerId);
+    //console.log("Request received for user ID:", req.params.workerId);
 
     const workerId = req.params.workerId;
-    console.log("User ID extracted from request:", workerId);
+    
+    //console.log("User ID extracted from request:", workerId);
 
     // Dohvatite sve rezervacije korisnika s odgovarajućim ID-om
     const reservations = await Reservation.find({ workerId: workerId });
-    console.log("Reservations found for user:", reservations);
-    
+    //console.log("Reservations found for user:", reservations);
 
     res.status(200).json(reservations);
   } catch (error) {

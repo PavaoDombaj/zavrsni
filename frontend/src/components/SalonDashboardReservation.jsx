@@ -201,11 +201,11 @@ const SalonDashboardSalon = () => {
     }
   };
 
-  const handleMarkAttendance = async (reservationId, attended) => {
+  const handleMarkAttendance = async (reservationId, dosao) => {
     try {
       await axios.put(
         `http://localhost:8800/api/reservation/${reservationId}`,
-        { attended },
+        { dosao },
         { withCredentials: true }
       );
       // Osvježiti rezervacije nakon označavanja prisutnosti
@@ -303,6 +303,11 @@ const SalonDashboardSalon = () => {
                   })
                   .replace(":00 ", " ");
 
+                  
+                  if(currentDate>endTime){
+                    reservation.stara = true
+                  }
+
                 return (
                   <li key={reservation._id} className="text-white mb-4">
                     <div>
@@ -313,19 +318,31 @@ const SalonDashboardSalon = () => {
                       <strong>Service:</strong> {reservation.service.name}
                     </div>
                     <div>
-                      <strong>Attended:</strong>{" "}
-                      {reservation.attended ? "Yes" : "No"}
+                      <strong>dosao:</strong>{" "}
+                      {reservation.dosao ? "Yes" : reservation.dosao==false ?"null" : "ne"}
                     </div>
-                    {!reservation.attended && (
+                    {reservation.stara &&( ///bilo !reservation.dosao sad ovo treba napravit samo ako je stara
+                   
+                    <>
                       <button
                         onClick={() =>
                           handleMarkAttendance(reservation._id, true)
                         }
-                        className="bg-green-500 rounded-xl font-bold font-poppins p-2 mt-2 mr-2"
+                        className="bg-green-700 hover:bg-green-900 rounded-xl font-bold font-poppins p-2 mt-2 mr-2"
                       >
-                        Mark as Attended
+                        Dosao
                       </button>
+                      <button
+                      onClick={() =>
+                        handleMarkAttendance(reservation._id, false)
+                      }
+                      className="bg-orange-700 hover:bg-orange-900 rounded-xl font-bold font-poppins p-2 mt-2 mr-2"
+                    >
+                      Nije dosao
+                    </button>
+                    </>
                     )}
+            
                     <button
                       onClick={() => handleDeleteReservation(reservation._id)}
                       className="bg-red-500 rounded-xl font-bold font-poppins p-2 mt-2"
