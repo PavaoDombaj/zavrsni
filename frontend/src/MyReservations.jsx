@@ -5,10 +5,7 @@ import Navbar2 from "./components/Navbar2";
 import SignBlocks from "./components/SignBlocks";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faClockRotateLeft,
-} from "@fortawesome/free-solid-svg-icons";
-
+import { faClockRotateLeft } from "@fortawesome/free-solid-svg-icons";
 
 const MyReservations = () => {
   const [userData, setUserData] = useState(null);
@@ -149,6 +146,20 @@ const MyReservations = () => {
     setShowPastReservation(!showPastReservation);
   };
 
+  const handleRatingChange = async (reservation, rating) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8800/api/review/${reservation.salon._id}`,
+        { reservationId: reservation._id, rating },
+        { withCredentials: true }
+      );
+      console.log("Rating submitted:", response.data);
+      // Ovdje možemo osvježiti podatke o rezervacijama ili napraviti druge radnje po potrebi
+    } catch (error) {
+      console.error("Error submitting rating:", error);
+    }
+  };
+
   return (
     <div className="bg-primary w-full overflow-hidden">
       <div className={`${styles.paddingX} ${styles.flexCenter}`}>
@@ -223,13 +234,19 @@ const MyReservations = () => {
                       <p className="bg-blue-400 p-2 rounded-xl">
                         {new Date(reservation.reservationTime).toLocaleString()}
                       </p>
-                    </div >
+                    </div>
                     <div className="ml-5">
                       <p className="font-semibold">Došao</p>
-                    {/*{reservation.dosao && (
-                        <div className="ml-5">
-                          
-                          <select>
+
+                      {reservation.dosao ? (
+                        <div>
+                          <select
+                            value={reservation.rating || ""}
+                            onChange={(e) =>
+                              handleRatingChange(reservation, e.target.value)
+                            }
+                          >
+                            <option value="">Select a rating</option>
                             <option value="1">1 Star</option>
                             <option value="2">2 Stars</option>
                             <option value="3">3 Stars</option>
@@ -237,20 +254,16 @@ const MyReservations = () => {
                             <option value="5">5 Stars</option>
                           </select>
                         </div>
-                      )}*/}
-                    {reservation.dosao ? <div >
-                          {/* Render rating component here */}
-                          {/* For example: */}
-                          <select>
-                            <option value="1">1 Star</option>
-                            <option value="2">2 Stars</option>
-                            <option value="3">3 Stars</option>
-                            <option value="4">4 Stars</option>
-                            <option value="5">5 Stars</option>
-                          </select>
-                        </div> : reservation.dosao === false ? <p>ne</p> : <FontAwesomeIcon  className="text-orange-400 bg-gray-800 rounded-xl p-2"icon={faClockRotateLeft} />}
+                      ) : reservation.dosao === false ? (
+                        <p>ne</p>
+                      ) : (
+                        <FontAwesomeIcon
+                          className="text-orange-400 bg-gray-800 rounded-xl p-2"
+                          icon={faClockRotateLeft}
+                        />
+                      )}
+                    </div>
                   </div>
-                </div>
                 </div>
               ))}
             </div>

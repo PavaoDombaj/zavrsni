@@ -7,6 +7,7 @@ import salonRoute from "./routes/salon.js";
 import workerRoute from "./routes/worker.js";
 import servicesRoute from "./routes/services.js"
 import reservationRoute from "./routes/reservation.js"
+import reviewRoute from "./routes/review.js";
 import cookieParser from "cookie-parser";
 import cors from 'cors'; 
 
@@ -44,6 +45,7 @@ app.use("/api/salons", salonRoute);
 app.use("/api/worker", workerRoute);        
 app.use("/api/services", servicesRoute);
 app.use("/api/reservation", reservationRoute);
+app.use("/api/review", reviewRoute);
 
 app.use((err, req, res, next) => {
     const errorStatus = err.status || 500
