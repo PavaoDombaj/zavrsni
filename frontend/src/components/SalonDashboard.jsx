@@ -41,7 +41,7 @@ const SalonDashboard = () => {
   return (
     <div className="flex h-screen">
       {/* Left navigation */}
-      <nav className="bg-gray-800 w-48 py-6 px-4 flex flex-col items-center sticky top-0 h-screen">
+      <nav className="bg-gray-800 w-48 py-6 px-4 flex flex-col items-center sticky top-0 h-full">
         <div className="flex flex-col items-center space-y-4">
           {[
             { icon: faHome, text: "Main" },
@@ -66,7 +66,7 @@ const SalonDashboard = () => {
       {/* Main content */}
       <div className="flex-grow bg-gray-100">
         {/* Navbar */}
-        <nav className="bg-gray-800 text-white py-4 px-6 flex justify-between items-center ">
+        <nav className="bg-gray-800 text-white py-4 px-6 flex justify-between items-center">
           <div className="text-xl font-bold">Bookly Dashboard [PARTNER]</div>
           <div className="flex">
             <input

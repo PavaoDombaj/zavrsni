@@ -21,7 +21,10 @@ import styles from "../style";
 const SalonDashboardSalon = () => {
   const [user, setUser] = useState(null);
   const [salon, setSalon] = useState(null);
+  const [workers, setWorkers] = useState(null);
   const [selectedServiceId, setSelectedServiceId] = useState(null);
+  const [selectedWorkerId, setselectedWorkerId] = useState(null);
+  const [selectedWorker, setSelectedWorker] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
   const [services, setServices] = useState([]);
   const [formData, setFormData] = useState({
@@ -92,6 +95,7 @@ const SalonDashboardSalon = () => {
             }
           );
           const workers = workersResponse.data;
+          console.log(workers);
 
           // Provjeravamo je li ID korisnika prisutan u tablici workers
           const isUserWorker = workers.some((worker) => worker._id === user.id);
@@ -171,6 +175,12 @@ const SalonDashboardSalon = () => {
     const service = services.find((s) => s._id === serviceId);
     setSelectedService(service);
   };
+  const handleWorkerChange = async (e) => {
+    const workerId = e.target.value;
+    setSelectedWorkerId(workerId);
+    const worker = workers.find((w) => w._id === workerId);
+    setSelectedService(worker);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -212,6 +222,54 @@ const SalonDashboardSalon = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        console.log(salon.id);
+        const response = await axios.get(
+          `http://localhost:8800/api/worker/salon/${salon.id}`
+        );
+
+        setWorkers(response.data);
+        console.log(workers);
+      } catch (error) {
+        console.error("Error fetching worker data:", error);
+      }
+    };
+
+    fetchData();
+  }, [salon]);
+
+  const handleWorkerSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.put(
+        `http://localhost:8800/api/worker/${selectedWorkerId}`,
+        selectedWorker,
+        { withCredentials: true }
+      );
+      console.log("Worker updated successfully:", response.data);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error updating:", error);
+    }
+  };
+  const handleDeleteWorker = async () => {
+    try {
+      await axios.delete(
+        `http://localhost:8800/api/worker/${selectedServiceId}`,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("Wowrker deleted successfully");
+      // Dodajte logiku za osvježavanje ili ponovno učitavanje podataka ako je potrebno
+    } catch (error) {
+      console.error("Error deleting worker:", error);
+    }
+  };
+
   if (!salon) {
     return <div>Loading...</div>;
   }
@@ -219,8 +277,6 @@ const SalonDashboardSalon = () => {
     console.log("user je gazda salona");
     const gazda = true;
   }
-
-
 
   return (
     <div className="bg-gray-900 rounded-[20px] h-full p-8">
@@ -316,7 +372,6 @@ const SalonDashboardSalon = () => {
           </div>
 
           {/* Dodajemo polje za unos radnog vremena */}
-          
 
           <button
             type="submit"
@@ -466,6 +521,74 @@ const SalonDashboardSalon = () => {
             className="bg-red-500  ml-3 text-white px-4 py-2 mt-4 rounded hover:bg-red-600"
           >
             Delete Service
+          </button>
+        </form>
+
+        <form onSubmit={handleWorkerSubmit}>
+          <div className="mt-4 flex flex-col">
+            <label
+              htmlFor="service"
+              className="block text-sm font-medium text-gray-700 undefined"
+            >
+              Select Worker:
+            </label>
+            <div className="flex flex-col items-start">
+              <select
+                name="service"
+                value={selectedWorkerId}
+                onChange={handleWorkerChange}
+                className="block w-full mt-1 border-gray-300 rounded-md shadow-sm
+        focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-neutral-200"
+              >
+                <option value="">Select a Worker</option>
+                {workers &&
+                  workers.map((worker) => (
+                    <option key={worker._id} value={worker._id}>
+                      {worker.name}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          </div>
+          {selectedWorkerId && (
+            <div>
+              <div className="mt-4 flex flex-col">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700 undefined"
+                >
+                  Worker name
+                </label>
+                <div className="flex flex-col items-start">
+                  <input
+                    type="text"
+                    name="name"
+                    value={selectedWorker.name || ""}
+                    onChange={(e) =>
+                      setSelectedWorker({
+                        ...selectedWorker,
+                        name: e.target.value,
+                      })
+                    }
+                    className="block w-full mt-1 border-gray-300 rounded-md shadow-sm
+                    focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-neutral-200"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+          <button
+            type="submit"
+            className="bg-blue-500 text-white px-4 py-2 mt-4 rounded hover:bg-blue-600"
+          >
+            Update Worker
+          </button>
+          <button
+            type="button"
+            onClick={handleDeleteWorker}
+            className="bg-red-500  ml-3 text-white px-4 py-2 mt-4 rounded hover:bg-red-600"
+          >
+            Delete Worker
           </button>
         </form>
       </div>
