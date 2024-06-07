@@ -112,9 +112,9 @@ const Dashboard = () => {
       <nav className="bg-gray-800 w-48 py-6 px-4 flex flex-col items-center sticky top-0 h-screen">
         <div className="flex flex-col items-center space-y-4">
           {[
-            { icon: faHome, text: "Main" },
-            { icon: faStore, text: "Salon", to: "/partner/dashboard/salon" }, // Dodajte to prop za preusmjeravanje na /salon
-            { icon: faUsers, text: "Users" },
+            { icon: faHome, text: "Main", to:"/admin" },
+            { icon: faStore, text: "Salon", to: "/admin/salon" }, // Dodajte to prop za preusmjeravanje na /salon
+            { icon: faUsers, text: "Users", to: "/admin/users" },
             { icon: faTable, text: "Tables" },
           ].map((item, index) => (
             <Link key={index} to={item.to || "#"} className="text-white text-lg flex items-center space-x-2"> {/* Dodajte Link element */}

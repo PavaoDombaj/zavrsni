@@ -221,7 +221,7 @@ const SalonDashboardSalon = () => {
         `http://localhost:8800/api/reservation/${reservationId}`,
         { withCredentials: true }
       );
-      // Osvježiti rezervacije nakon brisanja
+      // Osvježi rezervacije nakon brisanja
       handleShowReservations();
     } catch (error) {
       console.error("Error deleting reservation:", error);

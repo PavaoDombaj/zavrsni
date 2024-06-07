@@ -1,6 +1,7 @@
 import styles from "./style";
 import {Business, CTA, Footer, Navbar, Stats, Hero } from "./components";
 import { navLinks } from "./constants";
+import { Link } from "react-router-dom"; // Dodajemo Link
 
 const App = () => (
   <div className="bg-primary w-full overflow-hidden">

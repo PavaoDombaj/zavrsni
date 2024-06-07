@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { close, logo, menu } from "../assets";
 import { navLinks, navLinksClients } from "../constants";
-
+import { Link } from "react-router-dom"; // Dodajemo Link
 const Navbar = ({ navList }) => {
   const [active, setActive] = useState(navList[0].title);
   const [toggle, setToggle] = useState(false);
@@ -19,7 +19,9 @@ const Navbar = ({ navList }) => {
 
   return (
     <nav className="w-full flex py-6 justify-between items-center navbar">
-      <img src={logo} alt="BOOKLY" className="w-[auto] h-[80px] " />
+      <Link to="/">
+        <img src={logo} alt="BOOKLY" className="w-[auto] h-[80px]" />
+      </Link>
 
       <ul className="list-none sm:flex hidden justify-end items-center flex-1">
         {navList.map((nav, index) => (

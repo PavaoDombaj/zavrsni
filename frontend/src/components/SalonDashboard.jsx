@@ -46,7 +46,7 @@ const SalonDashboard = () => {
           {[
             { icon: faHome, text: "Main" },
             { icon: faStore, text: "Salon" },
-            { icon: faUsers, text: "Users" },
+            { icon: faUsers, text: "Users"},
             { icon: faTable, text: "Reservations" },
           ].map((item, index) => (
             <div

@@ -183,6 +183,7 @@ const MyReservations = () => {
               <h2 className={`${styles.heading2} text-center`}>
                 Past Reservations
               </h2>
+             
               {userReservationsPast.map((reservation) => (
                 <div
                   className="bg-gray-200 mb-5 p-4 rounded-lg"

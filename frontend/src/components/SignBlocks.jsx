@@ -51,7 +51,7 @@ const SignBlocks = () => {
                 >
                   Registracija
                 </h2>
-                <p className={`${styles.paragraph} text-center text-slate-700`}>
+                <p className={`font-poppins font-normaltext-[18px] leading-[30.8px] text-center text-slate-700`}>
                   Nemate profil? Registrirajte se!
                 </p>
               </div>
@@ -68,7 +68,7 @@ const SignBlocks = () => {
                 >
                   Prijava
                 </h2>
-                <p className={`${styles.paragraph} text-center text-slate-700`}>
+                <p className={`font-poppins font-normaltext-[18px] leading-[30.8px] text-center text-slate-700`}>
                   Prijavite se i pratite na jednom <br />
                   mjestu status Vaših rezervacija
                 </p>

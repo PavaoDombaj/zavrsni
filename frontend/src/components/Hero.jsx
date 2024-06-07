@@ -1,7 +1,7 @@
 import styles from "../style";
 import { discount, timeIcon } from "../assets";
 import GetStarted from "./GetStarted";
-
+import { Link } from "react-router-dom"; // Dodajemo Link
 const Hero = () => {
   return (
     <section
@@ -25,7 +25,9 @@ const Hero = () => {
             <span className="text-gradient ">ZBOGOM</span>{" "}
           </h1>
           <div className="ss:flex hidden md:mr-4 mr-0">
+          <Link to="/prices">
             <GetStarted />
+            </Link>
           </div>
         </div>
 
