@@ -80,13 +80,12 @@ const Reserve = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
+      try { //slanje zahtjeva za dohvaćanje radnika u odabranom salonu
         const response = await axios.get(
           `http://localhost:8800/api/worker/salon/${id}`
         );
         console.log("Workers for salon " + id + ":", response.data);
         setWorkers(response.data);
-        // Ovdje možete dalje obraditi podatke ili ih prikazati u vašem korisničkom sučelju
       } catch (error) {
         console.error("Error fetching worker data:", error);
       }
@@ -97,17 +96,15 @@ const Reserve = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
+      try { // slanje zahtjeva za dohvaćanje usluga u salonu
         console.log("Salonid: " + id);
         const response = await axios.get(
           `http://localhost:8800/api/services/salon/${id}`
         );
         console.log("Services:", response.data);
         setServices(response.data);
-        // Ovdje možete dalje obraditi podatke ili ih prikazati u vašem korisničkom sučelju
       } catch (error) {
         console.error("Error fetching services:", error);
-        // Ovdje možete obraditi grešku ili prikazati odgovarajuću poruku korisniku
       }
     };
 

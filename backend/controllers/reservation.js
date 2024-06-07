@@ -209,7 +209,7 @@ export const getAvailableTimes = async (req, res, next) => {
       0
     );
 
-    // Izračunajte slobodna vremena
+   
     const availableTimes = [];
 
     // Postavite početak vremena na prvi sat radnog vremena
@@ -228,7 +228,7 @@ export const getAvailableTimes = async (req, res, next) => {
         reservationEnd.getMinutes() + reservation.durationMinutes
       );
 
-      // Iterirajte kroz dostupna vremena i uklonite rezervirana vremena
+      // Listanje kroz dostupna vremena i uklonite rezervirana vremena
       let i = 0;
       while (i < availableTimes.length) {
         const availableTime = availableTimes[i];

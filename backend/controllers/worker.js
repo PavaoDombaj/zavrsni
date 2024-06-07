@@ -145,7 +145,6 @@ export const getWorkers = async (req, res, next) => {
 
 export const getWorkersBySalon = async (req, res, next) => {
     const salonId = req.params.id; 
-
     try {
         const Workers = await Worker.find({ salons: salonId });
         res.status(200).json(Workers);
